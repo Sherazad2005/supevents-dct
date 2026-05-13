@@ -1,0 +1,35 @@
+name: DCT Quality Checks
+
+on:
+ pull_request:
+   paths:
+     - "**/*.md"
+     - ".markdownlint.json"
+
+jobs:
+ markdown-quality:
+   runs-on: ubuntu-latest
+
+   steps:
+     - uses: actions/checkout@v4
+
+     - name: Setup Node
+       uses: actions/setup-node@v4
+       with:
+         node-version: "20"
+
+     - name: Install tools
+       run: |
+         npm install -g markdownlint-cli
+         npm install -g markdown-link-check
+         npm install -g @mermaid-js/mermaid-cli
+
+     - name: Lint Markdown
+       run: markdownlint "**/*.md"
+
+     - name: Check links
+       run: |
+         find . -name "*.md" -exec markdown-link-check {} \;
+
+     - name: Validate Mermaid blocks
+       run: echo "TODO: add mermaid validation script"
